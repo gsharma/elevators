@@ -19,3 +19,5 @@ Minimize for every user, the transit time (wait time outside + wait time inside)
 10. Elevator-external requests are scheduled by the elevator scheduler.
 11. Elevator has 3 operational modes - normal, emergency, stopped.
 12. Emergency op mode disables all external scheduling.
+
+## Implementation Notes
