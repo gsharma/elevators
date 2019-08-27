@@ -10,6 +10,9 @@ public final class ElevatorExternalRequest implements ElevatorRequest {
   private final int requestedFromFloor;
   private final ElevatorRequestDirection direction;
 
+  private long scheduledAtMillis;
+  private long completedAtMillis;
+
   public ElevatorExternalRequest(final String elevatorGroupId, final int requestedFromFloor,
       final ElevatorRequestDirection direction) {
     this.elevatorGroupId = elevatorGroupId;
@@ -33,6 +36,26 @@ public final class ElevatorExternalRequest implements ElevatorRequest {
   @Override
   public String getElevatorGroupId() {
     return elevatorGroupId;
+  }
+
+  @Override
+  public long getScheduledAt() {
+    return scheduledAtMillis;
+  }
+
+  @Override
+  public long getCompletedAt() {
+    return completedAtMillis;
+  }
+
+  @Override
+  public void setScheduledAt(final long scheduledAtMillis) {
+    this.scheduledAtMillis = scheduledAtMillis;
+  }
+
+  @Override
+  public void setCompletedAt(final long completedAtMillis) {
+    this.completedAtMillis = completedAtMillis;
   }
 
 }

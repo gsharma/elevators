@@ -26,4 +26,24 @@ public final class ElevatorGroup {
     return elevators;
   }
 
+  public Elevator findElevator(final String elevatorId) {
+    Elevator found = null;
+    for (final Elevator elevator : elevators) {
+      if (elevator.getId().equals(elevatorId)) {
+        found = elevator;
+        break;
+      }
+    }
+    return found;
+  }
+
+  public List<Elevator> findNormalModeElevators() {
+    final List<Elevator> normalModeElevators = new ArrayList<>();
+    for (final Elevator elevator : elevators) {
+      if (elevator.getMode() == ElevatorOperationMode.NORMAL) {
+        normalModeElevators.add(elevator);
+      }
+    }
+    return normalModeElevators;
+  }
 }
