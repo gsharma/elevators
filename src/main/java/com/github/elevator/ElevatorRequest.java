@@ -1,19 +1,14 @@
 package com.github.elevator;
 
-import java.util.UUID;
-
 /**
  * Base elevator request.
  * 
  * @author gaurav
  */
 public interface ElevatorRequest {
-  final String requestId = UUID.randomUUID().toString();
   final long createdAtMillis = System.currentTimeMillis();
 
-  public default String getRequestId() {
-    return requestId;
-  }
+  public String getRequestId();
 
   public ElevatorRequestMode getRequestMode();
 

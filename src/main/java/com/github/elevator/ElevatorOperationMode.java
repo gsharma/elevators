@@ -6,5 +6,5 @@ package com.github.elevator;
  * @author gaurav
  */
 public enum ElevatorOperationMode {
-  NORMAL, EMERGENCY, STOPPED;
+  NORMAL, EMERGENCY, STOPPING, STOPPED;
 }

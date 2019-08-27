@@ -1,14 +1,17 @@
 package com.github.elevator;
 
-import java.util.Comparator;
+import java.util.UUID;
 
 /**
  * Elevator scheduling request made from within the elevator.
  * 
+ * ElevatorInternalRequest has a Comparator used for ordering by requestedFloor.
+ * 
  * @author gaurav
  */
 public final class ElevatorInternalRequest
-    implements ElevatorRequest, Comparator<ElevatorInternalRequest> {
+    implements ElevatorRequest, Comparable<ElevatorInternalRequest> {
+  private final String requestId = UUID.randomUUID().toString();
   private final String elevatorGroupId;
   private final String elevatorId;
   private final int requestedFloor;
@@ -25,6 +28,11 @@ public final class ElevatorInternalRequest
 
   public int getRequestedFloor() {
     return requestedFloor;
+  }
+
+  @Override
+  public String getRequestId() {
+    return requestId;
   }
 
   @Override
@@ -62,9 +70,20 @@ public final class ElevatorInternalRequest
   }
 
   @Override
-  public int compare(ElevatorInternalRequest requestOne, ElevatorInternalRequest requestTwo) {
-    return Integer.valueOf(requestOne.getRequestedFloor())
-        .compareTo(Integer.valueOf(requestTwo.getRequestedFloor()));
+  public int compareTo(ElevatorInternalRequest other) {
+    return Integer.valueOf(getRequestedFloor())
+        .compareTo(Integer.valueOf(other.getRequestedFloor()));
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("ElevatorInternalRequest [requestId=").append(requestId)
+        .append(", elevatorGroupId=").append(elevatorGroupId).append(", elevatorId=")
+        .append(elevatorId).append(", requestedFloor=").append(requestedFloor)
+        .append(", createdAt=").append(createdAtMillis).append(", scheduledAt=")
+        .append(scheduledAtMillis).append(", completedAt=").append(completedAtMillis).append("]");
+    return builder.toString();
   }
 
 }
