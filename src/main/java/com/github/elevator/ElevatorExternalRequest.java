@@ -15,9 +15,11 @@ public final class ElevatorExternalRequest implements ElevatorRequest {
 
   private long scheduledAtMillis;
   private long completedAtMillis;
+  private ElevatorRequestState requestState;
 
   public ElevatorExternalRequest(final String elevatorGroupId, final int requestedFromFloor,
       final ElevatorRequestDirection direction) {
+    this.requestState = ElevatorRequestState.INIT;
     this.elevatorGroupId = elevatorGroupId;
     this.requestedFromFloor = requestedFromFloor;
     this.direction = direction;
@@ -67,13 +69,24 @@ public final class ElevatorExternalRequest implements ElevatorRequest {
   }
 
   @Override
+  public ElevatorRequestState getRequestState() {
+    return requestState;
+  }
+
+  @Override
+  public void setRequestState(final ElevatorRequestState requestState) {
+    this.requestState = requestState;
+  }
+
+  @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("ElevatorExternalRequest [requestId=").append(requestId)
         .append(", elevatorGroupId=").append(elevatorGroupId).append(", requestedFromFloor=")
-        .append(requestedFromFloor).append(", direction=").append(direction).append(", createdAt=")
-        .append(createdAtMillis).append(", scheduledAt=").append(scheduledAtMillis)
-        .append(", completedAt=").append(completedAtMillis).append("]");
+        .append(requestedFromFloor).append(", direction=").append(direction)
+        .append(", requestState=").append(requestState).append(", createdAt=")
+        .append(createdAtMillis).append(", scheduledAtMillis=").append(scheduledAtMillis)
+        .append(", completedAtMillis=").append(completedAtMillis).append("]");
     return builder.toString();
   }
 

@@ -31,6 +31,8 @@ public final class ElevatorScheduler {
    * 5. Failed:: a non-Completed request can reach Failed phase from any phase <br/>
    */
   public void scheduleRequest(final ElevatorRequest request) {
+    request.setRequestState(ElevatorRequestState.PENDING_SCHEDULING);
+
     if (ElevatorInternalRequest.class.isAssignableFrom(request.getClass())) {
       final ElevatorInternalRequest internalRequest = ElevatorInternalRequest.class.cast(request);
       final Set<ElevatorInternalRequest> elevatorInternalRequests =
@@ -42,4 +44,19 @@ public final class ElevatorScheduler {
     }
   }
 
+  /**
+   * Worker thread responsible for serving requests for an elevator.
+   * 
+   * @author gaurav
+   */
+  public static final class ElevatorRunner extends Thread {
+    private final Elevator elevator;
+
+    public ElevatorRunner(final Elevator elevator) {
+      this.elevator = elevator;
+    }
+
+    @Override
+    public void run() {}
+  }
 }

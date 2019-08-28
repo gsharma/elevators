@@ -18,9 +18,11 @@ public final class ElevatorInternalRequest
 
   private long scheduledAtMillis;
   private long completedAtMillis;
+  private ElevatorRequestState requestState;
 
   public ElevatorInternalRequest(final String elevatorGroupId, final String elevatorId,
       final int requestedFloor) {
+    requestState = ElevatorRequestState.INIT;
     this.elevatorGroupId = elevatorGroupId;
     this.elevatorId = elevatorId;
     this.requestedFloor = requestedFloor;
@@ -76,13 +78,24 @@ public final class ElevatorInternalRequest
   }
 
   @Override
+  public ElevatorRequestState getRequestState() {
+    return requestState;
+  }
+
+  @Override
+  public void setRequestState(final ElevatorRequestState requestState) {
+    this.requestState = requestState;
+  }
+
+  @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("ElevatorInternalRequest [requestId=").append(requestId)
         .append(", elevatorGroupId=").append(elevatorGroupId).append(", elevatorId=")
         .append(elevatorId).append(", requestedFloor=").append(requestedFloor)
-        .append(", createdAt=").append(createdAtMillis).append(", scheduledAt=")
-        .append(scheduledAtMillis).append(", completedAt=").append(completedAtMillis).append("]");
+        .append(", requestState=").append(requestState).append(", createdAt=")
+        .append(createdAtMillis).append(", scheduledAtMillis=").append(scheduledAtMillis)
+        .append(", completedAtMillis=").append(completedAtMillis).append("]");
     return builder.toString();
   }
 

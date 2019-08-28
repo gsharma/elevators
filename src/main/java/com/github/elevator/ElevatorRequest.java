@@ -12,6 +12,10 @@ public interface ElevatorRequest {
 
   public ElevatorRequestMode getRequestMode();
 
+  public ElevatorRequestState getRequestState();
+
+  public void setRequestState(final ElevatorRequestState requestState);
+
   public String getElevatorGroupId();
 
   public default long getCreatedAt() {
