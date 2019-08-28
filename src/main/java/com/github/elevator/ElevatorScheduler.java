@@ -22,6 +22,14 @@ public final class ElevatorScheduler {
     }
   }
 
+  /**
+   * As part of scheduling, a request goes through multiple phases: <br/>
+   * 1. Received:: request arrives and needs to be routed <br/>
+   * 2. Pending-scheduling:: request waits in a global buffer waiting to be routed <br/>
+   * 3. Scheduled:: request is routed and placed in an elevator's queue <br/>
+   * 4. Completed:: request is completed by the elevator <br/>
+   * 5. Failed:: a non-Completed request can reach Failed phase from any phase <br/>
+   */
   public void scheduleRequest(final ElevatorRequest request) {
     if (ElevatorInternalRequest.class.isAssignableFrom(request.getClass())) {
       final ElevatorInternalRequest internalRequest = ElevatorInternalRequest.class.cast(request);
