@@ -23,11 +23,25 @@ public final class ElevatorScheduler {
   private final Map<String, ElevatorRunner> elevatorRunners = new HashMap<>();
 
   public ElevatorScheduler(final ElevatorGroup elevatorGroup) {
+    Thread.currentThread().setName("elevator-scheduler");
     this.elevatorGroup = elevatorGroup;
+  }
+
+  public synchronized void init() {
+    logger.info("Initializing scheduler");
     for (final Elevator elevator : elevatorGroup.getElevators()) {
       elevatorInternalRequestMap.put(elevator.getId(), new TreeSet<ElevatorInternalRequest>());
       elevatorRunners.put(elevator.getId(), new ElevatorRunner(elevator));
     }
+    logger.info("Initialized scheduler");
+  }
+
+  public synchronized void tini() {
+    logger.info("Stopping scheduler");
+    for (final ElevatorRunner elevatorRunner : elevatorRunners.values()) {
+      elevatorRunner.interrupt();
+    }
+    logger.info("Stopped scheduler");
   }
 
   /**
@@ -64,12 +78,15 @@ public final class ElevatorScheduler {
    * @author gaurav
    */
   public static final class ElevatorRunner extends Thread {
+    private static final Logger logger = LogManager.getLogger(ElevatorRunner.class.getSimpleName());
+
     private final Elevator elevator;
 
     public ElevatorRunner(final Elevator elevator) {
       setName("runner-" + elevator.getId());
       setDaemon(true);
       this.elevator = elevator;
+      this.elevator.setMode(ElevatorOperationMode.NORMAL);
       start();
     }
 
@@ -82,6 +99,9 @@ public final class ElevatorScheduler {
         } catch (InterruptedException problem) {
         }
       }
+      this.elevator.setMode(ElevatorOperationMode.STOPPING);
+      this.elevator.setMode(ElevatorOperationMode.STOPPED);
+      logger.info("Stopped");
     }
   }
 
