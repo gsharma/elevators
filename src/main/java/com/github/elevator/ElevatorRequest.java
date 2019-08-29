@@ -10,7 +10,7 @@ public interface ElevatorRequest {
 
   public String getRequestId();
 
-  public ElevatorRequestMode getRequestMode();
+  public ElevatorRequestLocation getRequestLocation();
 
   public ElevatorRequestState getRequestState();
 

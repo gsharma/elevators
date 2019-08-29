@@ -5,20 +5,28 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Core object representing the elevator scheduler.
  * 
  * @author gaurav
  */
 public final class ElevatorScheduler {
+  private static final Logger logger =
+      LogManager.getLogger(ElevatorScheduler.class.getSimpleName());
+
   private final ElevatorGroup elevatorGroup;
   private final Map<String, Set<ElevatorInternalRequest>> elevatorInternalRequestMap =
       new HashMap<>();
+  private final Map<String, ElevatorRunner> elevatorRunners = new HashMap<>();
 
   public ElevatorScheduler(final ElevatorGroup elevatorGroup) {
     this.elevatorGroup = elevatorGroup;
     for (final Elevator elevator : elevatorGroup.getElevators()) {
       elevatorInternalRequestMap.put(elevator.getId(), new TreeSet<ElevatorInternalRequest>());
+      elevatorRunners.put(elevator.getId(), new ElevatorRunner(elevator));
     }
   }
 
@@ -31,6 +39,7 @@ public final class ElevatorScheduler {
    * 5. Failed:: a non-Completed request can reach Failed phase from any phase <br/>
    */
   public void scheduleRequest(final ElevatorRequest request) {
+    logger.info("Received for scheduling {}", request);
     request.setRequestState(ElevatorRequestState.PENDING_SCHEDULING);
 
     if (ElevatorInternalRequest.class.isAssignableFrom(request.getClass())) {
@@ -44,6 +53,11 @@ public final class ElevatorScheduler {
     }
   }
 
+  public void unscheduleRequest(final ElevatorRequest request) {
+    logger.info("Received for unscheduling {}", request);
+    // TODO
+  }
+
   /**
    * Worker thread responsible for serving requests for an elevator.
    * 
@@ -53,10 +67,22 @@ public final class ElevatorScheduler {
     private final Elevator elevator;
 
     public ElevatorRunner(final Elevator elevator) {
+      setName("runner-" + elevator.getId());
+      setDaemon(true);
       this.elevator = elevator;
+      start();
     }
 
     @Override
-    public void run() {}
+    public void run() {
+      logger.info("Servicing requests");
+      while (!isInterrupted()) {
+        try {
+          sleep(100L);
+        } catch (InterruptedException problem) {
+        }
+      }
+    }
   }
+
 }

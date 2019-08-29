@@ -5,6 +5,6 @@ package com.github.elevator;
  * 
  * @author gaurav
  */
-public enum ElevatorRequestMode {
+public enum ElevatorRequestLocation {
   INTERNAL, EXTERNAL;
 }

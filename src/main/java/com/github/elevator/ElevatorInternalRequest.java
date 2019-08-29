@@ -38,8 +38,8 @@ public final class ElevatorInternalRequest
   }
 
   @Override
-  public ElevatorRequestMode getRequestMode() {
-    return ElevatorRequestMode.INTERNAL;
+  public ElevatorRequestLocation getRequestLocation() {
+    return ElevatorRequestLocation.INTERNAL;
   }
 
   public String getElevatorId() {

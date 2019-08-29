@@ -31,8 +31,8 @@ public final class ElevatorExternalRequest implements ElevatorRequest {
   }
 
   @Override
-  public ElevatorRequestMode getRequestMode() {
-    return ElevatorRequestMode.EXTERNAL;
+  public ElevatorRequestLocation getRequestLocation() {
+    return ElevatorRequestLocation.EXTERNAL;
   }
 
   public int getRequestedFromFloor() {
