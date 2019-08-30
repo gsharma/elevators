@@ -1,6 +1,8 @@
 package com.github.elevator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -20,6 +22,7 @@ public final class ElevatorScheduler {
   private final ElevatorGroup elevatorGroup;
   private final Map<String, Set<ElevatorInternalRequest>> elevatorInternalRequestMap =
       new HashMap<>();
+  private final List<ElevatorExternalRequest> elevatorExternalRequests = new ArrayList<>();
   private final Map<String, ElevatorRunner> elevatorRunners = new HashMap<>();
 
   public ElevatorScheduler(final ElevatorGroup elevatorGroup) {
@@ -31,7 +34,8 @@ public final class ElevatorScheduler {
     logger.info("Initializing scheduler");
     for (final Elevator elevator : elevatorGroup.getElevators()) {
       elevatorInternalRequestMap.put(elevator.getId(), new TreeSet<ElevatorInternalRequest>());
-      elevatorRunners.put(elevator.getId(), new ElevatorRunner(elevator));
+      elevatorRunners.put(elevator.getId(),
+          new ElevatorRunner(elevator, elevatorInternalRequestMap.get(elevator.getId())));
     }
     logger.info("Initialized scheduler");
   }
@@ -81,12 +85,18 @@ public final class ElevatorScheduler {
     private static final Logger logger = LogManager.getLogger(ElevatorRunner.class.getSimpleName());
 
     private final Elevator elevator;
+    private final Set<ElevatorInternalRequest> elevatorInternalRequests;
 
-    public ElevatorRunner(final Elevator elevator) {
+    public ElevatorRunner(final Elevator elevator,
+        final Set<ElevatorInternalRequest> elevatorInternalRequests) {
       setName("runner-" + elevator.getId());
       setDaemon(true);
+
       this.elevator = elevator;
       this.elevator.setMode(ElevatorOperationMode.NORMAL);
+
+      this.elevatorInternalRequests = elevatorInternalRequests;
+
       start();
     }
 
@@ -95,6 +105,9 @@ public final class ElevatorScheduler {
       logger.info("Servicing requests");
       while (!isInterrupted()) {
         try {
+          int currentFloor = elevator.getCurrentFloor();
+          
+          elevator.getDirection();
           sleep(100L);
         } catch (InterruptedException problem) {
         }
