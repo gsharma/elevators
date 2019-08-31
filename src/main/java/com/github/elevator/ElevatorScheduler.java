@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +19,7 @@ public final class ElevatorScheduler {
       LogManager.getLogger(ElevatorScheduler.class.getSimpleName());
 
   private final ElevatorGroup elevatorGroup;
-  private final Map<String, Set<ElevatorInternalRequest>> elevatorInternalRequestMap =
+  private final Map<String, PriorityBlockingQueue<ElevatorInternalRequest>> elevatorInternalRequestMap =
       new HashMap<>();
   private final List<ElevatorExternalRequest> elevatorExternalRequests = new ArrayList<>();
   private final Map<String, ElevatorRunner> elevatorRunners = new HashMap<>();
@@ -33,7 +32,8 @@ public final class ElevatorScheduler {
   public synchronized void init() {
     logger.info("Initializing scheduler");
     for (final Elevator elevator : elevatorGroup.getElevators()) {
-      elevatorInternalRequestMap.put(elevator.getId(), new TreeSet<ElevatorInternalRequest>());
+      elevatorInternalRequestMap.put(elevator.getId(),
+          new PriorityBlockingQueue<ElevatorInternalRequest>());
       elevatorRunners.put(elevator.getId(),
           new ElevatorRunner(elevator, elevatorInternalRequestMap.get(elevator.getId())));
     }
@@ -62,7 +62,7 @@ public final class ElevatorScheduler {
 
     if (ElevatorInternalRequest.class.isAssignableFrom(request.getClass())) {
       final ElevatorInternalRequest internalRequest = ElevatorInternalRequest.class.cast(request);
-      final Set<ElevatorInternalRequest> elevatorInternalRequests =
+      final PriorityBlockingQueue<ElevatorInternalRequest> elevatorInternalRequests =
           elevatorInternalRequestMap.get(internalRequest.getElevatorId());
       elevatorInternalRequests.add(internalRequest);
     }
@@ -85,10 +85,10 @@ public final class ElevatorScheduler {
     private static final Logger logger = LogManager.getLogger(ElevatorRunner.class.getSimpleName());
 
     private final Elevator elevator;
-    private final Set<ElevatorInternalRequest> elevatorInternalRequests;
+    private final PriorityBlockingQueue<ElevatorInternalRequest> elevatorInternalRequests;
 
     public ElevatorRunner(final Elevator elevator,
-        final Set<ElevatorInternalRequest> elevatorInternalRequests) {
+        final PriorityBlockingQueue<ElevatorInternalRequest> elevatorInternalRequests) {
       setName("runner-" + elevator.getId());
       setDaemon(true);
 
@@ -105,9 +105,10 @@ public final class ElevatorScheduler {
       logger.info("Servicing requests");
       while (!isInterrupted()) {
         try {
-          int currentFloor = elevator.getCurrentFloor();
-          
-          elevator.getDirection();
+          while (!elevatorInternalRequests.isEmpty()) {
+            int currentFloor = elevator.getCurrentFloor();
+            elevator.getDirection();
+          }
           sleep(100L);
         } catch (InterruptedException problem) {
         }
