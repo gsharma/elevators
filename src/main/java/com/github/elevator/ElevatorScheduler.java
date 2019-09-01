@@ -107,7 +107,8 @@ public final class ElevatorScheduler {
         try {
           while (!elevatorInternalRequests.isEmpty()) {
             int currentFloor = elevator.getCurrentFloor();
-            elevator.getDirection();
+            ElevatorDirection direction = elevator.getDirection();
+            elevatorInternalRequests.peek();
           }
           sleep(100L);
         } catch (InterruptedException problem) {
