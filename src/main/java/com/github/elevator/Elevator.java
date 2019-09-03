@@ -1,5 +1,6 @@
 package com.github.elevator;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -21,6 +22,7 @@ public final class Elevator {
   private ElevatorDirection direction = ElevatorDirection.NONE;
   private ElevatorOperationMode mode = ElevatorOperationMode.STOPPED;
   private int currentFloor;
+  private int nextFloor;
 
   public Elevator(final int maxUserCapacity, final int highestFloor,
       final int[] unscheduledFloors) {
@@ -77,6 +79,14 @@ public final class Elevator {
     this.currentFloor = currentFloor;
   }
 
+  public int getNextFloor() {
+    return nextFloor;
+  }
+
+  public void setNextFloor(final int nextFloor) {
+    this.nextFloor = nextFloor;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -113,6 +123,18 @@ public final class Elevator {
       return false;
     }
     return true;
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Elevator [id=").append(id).append(", groupId=").append(groupId)
+        .append(", maxUserCapacity=").append(maxUserCapacity).append(", highestFloor=")
+        .append(highestFloor).append(", unscheduledFloors=")
+        .append(Arrays.toString(unscheduledFloors)).append(", direction=").append(direction)
+        .append(", mode=").append(mode).append(", currentFloor=").append(currentFloor)
+        .append(", nextFloor=").append(nextFloor).append("]");
+    return builder.toString();
   }
 
 }
