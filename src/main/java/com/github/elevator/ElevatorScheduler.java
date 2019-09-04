@@ -68,6 +68,8 @@ public final class ElevatorScheduler {
     }
 
     else if (ElevatorExternalRequest.class.isAssignableFrom(request.getClass())) {
+      final ElevatorExternalRequest externalRequest = ElevatorExternalRequest.class.cast(request);
+      elevatorExternalRequests.add(externalRequest);
     }
   }
 

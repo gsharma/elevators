@@ -46,4 +46,19 @@ public final class ElevatorGroup {
     }
     return normalModeElevators;
   }
+
+  public void reset() {
+    for (final Elevator elevator : elevators) {
+      elevator.reset();
+    }
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("ElevatorGroup [id=").append(id).append(", elevators=").append(elevators)
+        .append("]");
+    return builder.toString();
+  }
+
 }

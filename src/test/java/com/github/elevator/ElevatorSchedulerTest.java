@@ -1,6 +1,8 @@
 package com.github.elevator;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -14,39 +16,45 @@ public final class ElevatorSchedulerTest {
   @Test
   public void testScheduler() {
     final ElevatorGroup group = new ElevatorGroup();
+    assertNotNull(group.getId());
 
-    final Elevator one = new Elevator(10, 50, null);
-    assertEquals(0, one.getCurrentFloor());
-    assertEquals(0, one.getNextFloor());
-    assertEquals(ElevatorDirection.NONE, one.getDirection());
+    final Elevator one = new Elevator(10, 1, 50, null);
     group.addElevator(one);
 
-    final Elevator two = new Elevator(10, 50, null);
-    assertEquals(0, two.getCurrentFloor());
-    assertEquals(0, two.getNextFloor());
-    assertEquals(ElevatorDirection.NONE, two.getDirection());
+    final Elevator two = new Elevator(10, 1, 50, null);
     group.addElevator(two);
 
-    final Elevator three = new Elevator(10, 50, null);
-    assertEquals(0, three.getCurrentFloor());
-    assertEquals(0, three.getNextFloor());
-    assertEquals(ElevatorDirection.NONE, three.getDirection());
+    final Elevator three = new Elevator(10, 1, 50, null);
     group.addElevator(three);
 
-    final Elevator four = new Elevator(10, 50, null);
-    assertEquals(0, four.getCurrentFloor());
-    assertEquals(0, four.getNextFloor());
-    assertEquals(ElevatorDirection.NONE, four.getDirection());
+    final Elevator four = new Elevator(10, 1, 50, null);
     group.addElevator(four);
 
-    final Elevator five = new Elevator(10, 50, null);
-    assertEquals(0, five.getCurrentFloor());
-    assertEquals(0, five.getNextFloor());
-    assertEquals(ElevatorDirection.NONE, five.getDirection());
+    final Elevator five = new Elevator(10, 1, 50, null);
     group.addElevator(five);
+
+    assertEquals(5, group.getElevators().size());
+
+    for (final Elevator elevator : group.getElevators()) {
+      assertNotNull(elevator.getId());
+      assertEquals(Integer.MIN_VALUE, elevator.getCurrentFloor());
+      assertEquals(Integer.MIN_VALUE, elevator.getNextFloor());
+      assertEquals(ElevatorOperationMode.STOPPED, elevator.getMode());
+      assertEquals(ElevatorDirection.NONE, elevator.getDirection());
+    }
 
     final ElevatorScheduler scheduler = new ElevatorScheduler(group);
     scheduler.init();
+
+    final ElevatorExternalRequest externalOne =
+        new ElevatorExternalRequest(group.getId(), 1, ElevatorRequestDirection.UP);
+    assertNotNull(externalOne.getRequestId());
+    assertTrue(externalOne.getCreatedAt() > 0);
+    assertEquals(ElevatorRequestState.INIT, externalOne.getRequestState());
+
+    scheduler.scheduleRequest(externalOne);
+    assertEquals(ElevatorRequestState.PENDING_SCHEDULING, externalOne.getRequestState());
+
     scheduler.tini();
   }
 

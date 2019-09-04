@@ -16,19 +16,28 @@ public final class Elevator {
   // maximum users that can be packed in an elevator
   private final int maxUserCapacity;
 
+  private final int lowestFloor;
   private final int highestFloor;
   private final int[] unscheduledFloors;
 
   private ElevatorDirection direction = ElevatorDirection.NONE;
   private ElevatorOperationMode mode = ElevatorOperationMode.STOPPED;
-  private int currentFloor;
-  private int nextFloor;
+  private int currentFloor = Integer.MIN_VALUE;
+  private int nextFloor = Integer.MIN_VALUE;
 
-  public Elevator(final int maxUserCapacity, final int highestFloor,
+  public Elevator(final int maxUserCapacity, final int lowestFloor, final int highestFloor,
       final int[] unscheduledFloors) {
     this.maxUserCapacity = maxUserCapacity;
+    this.lowestFloor = lowestFloor;
     this.highestFloor = highestFloor;
     this.unscheduledFloors = unscheduledFloors;
+  }
+
+  public void reset() {
+    direction = ElevatorDirection.NONE;
+    mode = ElevatorOperationMode.STOPPED;
+    currentFloor = Integer.MIN_VALUE;
+    nextFloor = Integer.MIN_VALUE;
   }
 
   public String getId() {
@@ -37,6 +46,10 @@ public final class Elevator {
 
   public int getMaxUserCapacity() {
     return maxUserCapacity;
+  }
+
+  public int getLowestFloor() {
+    return lowestFloor;
   }
 
   public int getHighestFloor() {
@@ -129,11 +142,12 @@ public final class Elevator {
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("Elevator [id=").append(id).append(", groupId=").append(groupId)
-        .append(", maxUserCapacity=").append(maxUserCapacity).append(", highestFloor=")
-        .append(highestFloor).append(", unscheduledFloors=")
-        .append(Arrays.toString(unscheduledFloors)).append(", direction=").append(direction)
-        .append(", mode=").append(mode).append(", currentFloor=").append(currentFloor)
-        .append(", nextFloor=").append(nextFloor).append("]");
+        .append(", maxUserCapacity=").append(maxUserCapacity).append(", lowestFloor=")
+        .append(lowestFloor).append(", highestFloor=").append(highestFloor)
+        .append(", unscheduledFloors=").append(Arrays.toString(unscheduledFloors))
+        .append(", direction=").append(direction).append(", mode=").append(mode)
+        .append(", currentFloor=").append(currentFloor).append(", nextFloor=").append(nextFloor)
+        .append("]");
     return builder.toString();
   }
 
