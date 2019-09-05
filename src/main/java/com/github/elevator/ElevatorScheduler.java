@@ -114,6 +114,8 @@ public final class ElevatorScheduler {
           }
           sleep(100L);
         } catch (InterruptedException problem) {
+          // In a real physical system, care would have to be taken to not just abruptly stop
+          // between floors
         }
       }
       this.elevator.setMode(ElevatorOperationMode.STOPPING);
