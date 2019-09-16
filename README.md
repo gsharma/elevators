@@ -38,5 +38,6 @@ Note: list needs to be segregated by user vs operator requirements::
 ## Implementation Notes
 
 0. What amounts to a sub-optimal decision?
+
 Any “change of mind” decision elongates service time for already-made promises. Consider in-flight passengers as promises, elevator scheduler should maintain the direction of travel. It is okay to accept more internal and external requests along the direction of travel assuming they are all scheduled before reversing direction of travel.
 
