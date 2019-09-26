@@ -31,6 +31,9 @@ public final class Elevator {
     this.lowestFloor = lowestFloor;
     this.highestFloor = highestFloor;
     this.unscheduledFloors = unscheduledFloors;
+    if (lowestFloor > highestFloor) {
+      throw new IllegalArgumentException("lowestFloor cannot be greater than the highestFloor");
+    }
   }
 
   public void reset() {
